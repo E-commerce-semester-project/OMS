@@ -1,17 +1,14 @@
 package net.oms.database;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConfig {
     private Connection connection;
-    private String host = "localhost";
-    private String port = "5432";
-    private String database = "oms";
-    private String username = "postgres";
-    private String password = "Azizaetl8.";
-
+    private final Dotenv dotenv = Dotenv.load();
 
     public boolean isConnected() {
         return connection != null;
@@ -20,7 +17,7 @@ public class DatabaseConfig {
     public void connect() {
         if(!isConnected()) {
             try {
-                DriverManager.getConnection("jdbc:postgresql://" + host + ":" + port + "/" + database, username, password);
+                DriverManager.getConnection("jdbc:postgresql://" + dotenv.get("db_host") + ":" + dotenv.get("db_port") + "/" + dotenv.get("db_name"), dotenv.get("db_user"), dotenv.get("db_password"));
                 System.out.println("Connected to postgres database");
             } catch (SQLException e) {
                 System.out.println("Failed to connected to postgres database + " + e.getCause() + e.getMessage());
